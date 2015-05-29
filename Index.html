@@ -1,0 +1,111 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Budget tracker</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  </head>
+  <body>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <!-- Flot plotting library -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/flot/0.8.2/jquery.flot.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/flot/0.8.2/jquery.flot.pie.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/flot/0.8.2/jquery.flot.time.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/flot/0.8.2/jquery.flot.resize.min.js"></script>
+    
+    <?!= getContent("JavaScript.html") ?>
+    <?!= getContent("Stylesheet.html") ?>
+    
+    <div class="container" id="main-wrapper">
+        <div class="row padded">
+
+          <div class="col-md-10 col-md-offset-1">   
+            <h1>Budget Tracker App</h1>
+            <div class="row">
+
+              <div class="col-md-4">
+                <div class="row padded">
+                  <h3>Add entry</h3>
+                  <form role="form">
+                    <div class="form-group">
+                      <select id="type" class="form-control">
+                        <option value="i">Income</option>
+                        <option value="e">Expense</option>
+                      </select> 
+                    </div>
+                    <div class="form-group">
+                      <select id="category" class="form-control">
+                      </select> 
+                    </div>
+                    <div class="form-group">
+                      <input type="text" id="value" placeholder="Amount" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <input type="text" id="comment" value="" placeholder="Comment (optional)" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                      <input type="button" id="add-entry" value="Add" class="btn btn-default"/>
+                      <span id="loading-label"></span>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="row padded">
+                  <h3>Summary</h3>
+                  <table class="table table-condensed">
+                    <tbody>
+                      <tr><td>Total income</td><td  style="color:green" id="total-income"></td></tr>
+                      <tr><td>Total expenses</td><td  style="color:red" id="total-expenses"></td></tr>
+                      <tr><td>Balance</td><td id="total-balance"></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+
+
+              <div class="col-md-6">
+                <div class="row padded">
+                 <h3>Latest Activity</h3>
+                 <table id="data-table" class="table table-condensed">
+                   <thead>
+                     <tr>
+                       <th>Date</th>
+                       <th>Person</th>
+                       <th>Category</th>
+                       <th>Amount</th>
+                       <th>Comment</th>
+                     </tr>
+                   </thead>
+                   <tbody>
+                   </tbody>
+                 </table>
+               </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>  <!-- row -->
+       
+       <div class="row padded">
+         <div class="col-md-10 col-md-offset-1">
+                <div class="row">
+                   <h3>Whole time</h3>
+                   <div id="flot-placeholder" class="flot-placeholder">
+                   </div>
+                </div>
+         </div>
+       </div>
+       
+       </div> <!-- main-wrapper --> 
+    
+  </body>
+</html>

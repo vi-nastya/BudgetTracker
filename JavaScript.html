@@ -1,0 +1,124 @@
+<script>
+
+var global_state = {};
+
+$(document).ready(function() {
+  updateTable();
+  updateChart();
+  loadCategories();
+  loadSummary();
+  
+  $('#add-entry').click(function() {
+    var params = {
+      type: $('#type').val(), 
+      category: $('#category').val(), 
+      amount: parseInt($('#value').val()), 
+      comment: $('#comment').val()
+    };
+    console.log('Params: ' + JSON.stringify(params));
+    google.script.run.withSuccessHandler(
+	  function (data) {
+		updateTable();
+	  }).addRow(JSON.stringify(params));
+  });
+  
+  $("#type").change(function () {
+    updateCategoryList();
+  });
+});
+
+function updateCategoryList() {
+  var type = $('#type').val();
+  var categories = global_state.categories[type];
+  var options = '';
+  for (var i = 0; i < categories.length; i++) {
+    options += '<option value="' + categories[i] + '">' + categories[i] + '</option>\n';
+  }
+  $('#category').html(options);
+}
+
+function loadCategories() {
+   google.script.run.withSuccessHandler(
+	  function (categories) {
+		categories = JSON.parse(categories);
+        global_state.categories = categories;
+        updateCategoryList();
+	  }).getCategories();
+}
+
+function fillTable(data) {
+  var table = $('#data-table tbody');
+  var body = '';
+  for (var i = 0; i < data.length; i++) {
+    body += '<tr>';
+    for (var j = 0; j < data[i].length; j++) {
+      if (j == 3) {
+        body += '<td>' + '<span style="color:' + ((data[i][j] > 0)? 'green' : 'red') + '">' + data[i][j] + '</span></td>\n';
+      } else {
+        body += '<td>' + data[i][j] + '</td>\n';
+      }
+    }
+    body += '</tr>\n';
+  }
+  table.html(body);
+}
+
+function updateChart() {
+  var flotOptions = 
+  {
+	series: {
+		shadowSize: 5
+	},
+	xaxes: [
+	{
+		mode: "time",       
+		tickFormatter: function (val, axis) {           
+			var date = new Date(val);
+			return date.getDate();
+		},
+		color: "black",
+		position: "top",       
+		axisLabel: "Date",
+		axisLabelUseCanvas: true,
+		axisLabelFontSizePixels: 12,
+		axisLabelFontFamily: 'Verdana, Arial',
+		axisLabelPadding: 5
+	}]
+  };
+  
+  google.script.run.withSuccessHandler(
+	  function (pointsForChart) {
+        pointsForChart = JSON.parse(pointsForChart);
+        console.log(pointsForChart);
+		  $.plot($("#flot-placeholder"),
+          [
+          {
+            label: "Total",
+            data: pointsForChart,
+            color: "#FF0000",
+            points: { fillColor: "#FF0000", show: true },
+            lines: { show: true }
+          }],
+          flotOptions);
+	  }).loadPointsForChartWholeTime();
+}
+
+function updateTable() {
+  google.script.run.withSuccessHandler(
+	  function (data) {
+		fillTable(JSON.parse(data));
+	  }).getTable(20);
+}
+
+
+function loadSummary() {
+ google.script.run.withSuccessHandler(
+ function (data) {
+   data = JSON.parse(data);
+   $("#total-income").html(data[2]);
+   $("#total-expenses").html(data[1]);
+   $("#total-balance").html(data[0]);
+ }).calculateSummary(); 
+}
+
+</script>
